@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://c32kq228ty0ww"]
+
+[ext_resource type="Shader" uid="uid://c4u7on17jxp1r" path="res://standard_material_3d_02.gdshader" id="1_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://cptjm5ivfiaxb" path="res://Seagull.001_col.png" id="2_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://cdtsnji2rstah" path="res://Seagull.001_pos.exr" id="3_lquwl"]
+[ext_resource type="Script" uid="uid://bdu63v0la68fy" path="res://make_copies.gd" id="5_lquwl"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_ig7tw"]
+sky_material = SubResource("ProceduralSkyMaterial_7dm0k")
+
+[sub_resource type="Environment" id="Environment_0xm2m"]
+background_mode = 1
+sky = SubResource("Sky_ig7tw")
+glow_enabled = true
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pml41"]
+lifetime_randomness = 1.0
+emission_shape = 4
+emission_point_texture = ExtResource("3_lquwl")
+emission_color_texture = ExtResource("2_1bvp3")
+emission_point_count = 949
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1bvp3"]
+render_priority = 0
+shader = ExtResource("1_1bvp3")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/albedo_texture_size = Vector2i(0, 0)
+shader_parameter/point_size = 0.0
+shader_parameter/roughness = 0.0
+shader_parameter/metallic_texture_channel = Vector4(0, 0, 0, 0)
+shader_parameter/specular = 0.0
+shader_parameter/metallic = 0.0
+shader_parameter/particles_anim_h_frames = 0
+shader_parameter/particles_anim_v_frames = 0
+shader_parameter/particles_anim_loop = false
+shader_parameter/normal_scale = 0.0
+shader_parameter/uv1_scale = Vector3(0, 0, 0)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(0, 0, 0)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+
+[sub_resource type="QuadMesh" id="QuadMesh_ql2ak"]
+material = SubResource("ShaderMaterial_1bvp3")
+size = Vector2(0.025, 0.025)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_pml41"]
+size = Vector2(10, 10)
+
+[node name="Node3D" type="Node3D" unique_id=457034404]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=736093602]
+environment = SubResource("Environment_0xm2m")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1762573240]
+transform = Transform3D(1.1920928e-07, -0.8660255, 0.49999994, -0.8573069, 0.25740272, 0.44583488, -0.5148057, -0.42865345, -0.7424496, 0, 0.6817117, -1)
+shadow_enabled = true
+
+[node name="GPUParticles3D2" type="GPUParticles3D" parent="." unique_id=861138658]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+amount = 949
+lifetime = 9999999.0
+explosiveness = 1.0
+local_coords = true
+transform_align = 1
+transform_align_channel_filter = 1
+process_material = SubResource("ParticleProcessMaterial_pml41")
+draw_pass_1 = SubResource("QuadMesh_ql2ak")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=14505814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9754598, 0.43287003, 5.8509264)
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=926933803]
+mesh = SubResource("PlaneMesh_pml41")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1117498236]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4183781, 0.6317332, 0.36351168)
+light_color = Color(0.6156863, 1, 1, 1)
+
+[node name="Copies" type="Node3D" parent="." unique_id=1658784951 node_paths=PackedStringArray("node_to_copy")]
+script = ExtResource("5_lquwl")
+node_to_copy = NodePath("../GPUParticles3D2")
+amount = Vector3(8, 8, 7)
